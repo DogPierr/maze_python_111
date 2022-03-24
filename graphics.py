@@ -1,52 +1,53 @@
 import map_gen
-from tkinter import *
+import pygame
+import sys
 
 
 class Graphics:
-    def __init__(self):
-        self.width = 1000
-        self.height = 1000
-        self.x_cells = 50
-        self.y_cells = 50
+    def __init__(self, w, h, x_cells, y_cells, window):
+        self.width = w
+        self.height = h
+        self.x_cells = x_cells
+        self.y_cells = y_cells
         self.cell_width = self.height / (3 * self.y_cells)
-        self.cell_height = self.width / (3 * self.x_cells)
+        self.cell_height = self.cell_width
         self.cells = [
-            [(i * self.cell_width, j * self.cell_height, (i + 1) * self.cell_width, (j + 1) * self.cell_height) for i in
+            [pygame.Rect(i * self.cell_width, j * self.cell_height, self.cell_width, self.cell_height) for i in
              range(3 * self.x_cells)] for j in
             range(3 * self.y_cells)]
         self.field = []
-        self.window = Tk()
-        self.window.geometry('1000x1000')
-        self.canvas = Canvas(bg="white", width=self.width, height=self.height)
         self.passes = {}
-        self.walls = {}
+        self.window = window
 
     def DFSmap(self):
         dfs = map_gen.DFSGenerator(self.x_cells, self.y_cells)
         self.field = dfs.map
         self.passes = dfs.passes
-        self.walls = dfs.walls
         for y in range(3 * self.y_cells):
-            # print(y, ")")
             for x in range(3 * self.x_cells):
-                x0 = self.cells[y][x][0]
-                y0 = self.cells[y][x][1]
-                x1 = self.cells[y][x][2]
-                y1 = self.cells[y][x][3]
-                if self.field[y][x  ] == 1:
-                    self.canvas.create_rectangle(x0, y0, x1, y1, fill="#1f1")
-                # print()
+                if self.field[y][x] == 1:
+                    pygame.draw.rect(self.window, (0, 255, 0), self.cells[y][x], 0)
 
-        # for line in self.field:
-        #     for var in line:
-        #         print(var, end="")
-        #     print()
-        self.canvas.pack(fill=BOTH, expand=1)
+    def DrawCellWithNumber(self, x, y):
+        pygame.draw.rect(self.window, (255, 0, 0), self.cells[y][x], 0)
+        pygame.time.delay(25)
+        pygame.display.flip()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
 
-    def MainLoop(self):
-        self.DFSmap()
-        self.window.mainloop()
-
-
-game = Graphics()
-game.MainLoop()
+    def DrawPath(self, path):
+        for cell in range(len(path) - 1):
+            v = path[cell]
+            to = path[cell + 1]
+            if v[0] == to[0]:
+                start = min(v[1], to[1])
+                end = max(v[1], to[1])
+                for i in range(1 + 3 * start, 1 + 3 * end + 1):
+                    self.DrawCellWithNumber(i, 1 + 3 * v[0])
+            elif v[1] == to[1]:
+                start = min(v[0], to[0])
+                end = max(v[0], to[0])
+                for i in range(1 + 3 * start, 1 + 3 * end + 1):
+                    self.DrawCellWithNumber(1 + 3 * v[1], i)

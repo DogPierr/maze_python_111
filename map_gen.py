@@ -1,6 +1,5 @@
 import random
 import sys
-from tkinter import *
 
 sys.setrecursionlimit(12000)
 
@@ -14,7 +13,6 @@ class DFSGenerator:
         self.passes = {}
         self.walls = {}
         self.GenerateMap()
-        self.GenerateWallsEdges()
 
     def DFS(self, coords):
         self.visited[coords[0]][coords[1]] = 1
@@ -23,11 +21,11 @@ class DFSGenerator:
         while len(available_neighbours) > 0:
             direction = random.randint(0, len(available_neighbours) - 1)
             neighbour = available_neighbours[direction]
+
             if self.visited[neighbour[0]][neighbour[1]] == 0:
-                if coords not in self.passes.keys():
-                    self.passes[coords] = []
-                self.passes[coords].append(neighbour)
+                self.AddPass(coords, neighbour)
                 self.DFS(neighbour)
+
             del available_neighbours[direction]
 
     def GetNeighbours(self, coords, borders, condition_manager=(lambda coord: False)):
@@ -59,30 +57,8 @@ class DFSGenerator:
                     for i in range(1 + 3 * start, 1 + 3 * end + 1):
                         self.map[i][1 + 3 * v[1]] = 0
 
-    def GenerateWallsEdges(self):
-        for i in range(3 * self.height):
-            for j in range(3 * self.width):
-                coords = (i, j)
-                available_neighbours = self.GetNeighbours(coords, (3 * self.height, 3 * self.width),
-                                                          lambda coord: self.map[coord[0]][coord[1]] != 1)
+    def AddPass(self, coords, neighbour):
+        if coords not in self.passes.keys():
+            self.passes[coords] = []
+        self.passes[coords].append(neighbour)
 
-                while len(available_neighbours) > 0:
-                    neighbour = available_neighbours[0]
-                    if coords not in self.walls.keys():
-                        self.walls[coords] = []
-                    self.walls[coords].append(neighbour)
-
-                    del available_neighbours[0]
-
-
-if __name__ == '__main__':
-    map = DFSGenerator(3, 3)
-    map.GenerateMap()
-    root = Tk()
-    canvas = Canvas(bg="white", width=1000, height=1000)
-    for v in map.passes.keys():
-        for to in map.passes[v]:
-            canvas.create_line(20 + v[0] * 20, 20 + v[1] * 20, 20 + to[0] * 20, 20 + to[1] * 20)
-
-    canvas.pack(fill=BOTH, expand=1)
-    root.mainloop()
