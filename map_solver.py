@@ -7,9 +7,9 @@ class Solver:
         self.begin = (0, 0)
         self.end = (cells_y - 1, cells_x - 1)
         self.dist = [[float('inf') for _ in range(self.cells_y)] for _ in range(self.cells_x)]
-        self.Solve()
+        self.solve()
 
-    def Solve(self):
+    def solve(self):
         queue = [self.begin]
         self.dist[self.begin[0]][self.begin[1]] = 0
         exit_flag = False
@@ -25,14 +25,14 @@ class Solver:
                         exit_flag = True
                         break
         self.path.append(self.end)
-        neighbour = self.GetNeighbour(self.end, (self.cells_y, self.cells_x))
+        neighbour = self.get_neighbour(self.end, (self.cells_y, self.cells_x))
         while neighbour != self.begin:
             self.path.append(neighbour)
-            neighbour = self.GetNeighbour(neighbour, (self.cells_y, self.cells_x))
+            neighbour = self.get_neighbour(neighbour, (self.cells_y, self.cells_x))
         self.path.append(self.begin)
         self.path = self.path[::-1]
 
-    def GetNeighbour(self, coords, borders):
+    def get_neighbour(self, coords, borders):
         neighbors = [(i, j) for i, j in zip([coords[0] - 1, coords[0] + 1, coords[0], coords[0]],
                                             [coords[1], coords[1], coords[1] + 1, coords[1] - 1])]
         i = 0
