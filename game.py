@@ -4,7 +4,9 @@ import graphics
 import map_solver
 import constants
 import button
+import map_data
 import sys
+
 
 
 class Game:
@@ -46,6 +48,7 @@ class Game:
     def map_with_dfs(self):
         self.clear()
         dfs = dfs_gen.DFSGenerator(self.amount_of_cells_x, self.amount_of_cells_y)
+        map_data.save(dfs.map, dfs.passes)
         self.graphics.gen_map(dfs.map, dfs.passes)
         solve = map_solver.Solver(self.graphics.passes, self.amount_of_cells_x, self.amount_of_cells_y)
         pygame.display.flip()
