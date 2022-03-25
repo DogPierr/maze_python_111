@@ -58,4 +58,3 @@ class Graphics:
     def clear_display(self):
         pygame.draw.rect(self.window, (0, 0, 0),
                          pygame.Rect(0, constants.MARGIN_TOP, self.width, self.height - constants.MARGIN_TOP), 0)
-        pygame.display.flip()

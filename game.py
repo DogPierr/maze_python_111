@@ -23,7 +23,14 @@ class Game:
         self.is_playing = True
         self.is_stop = False
 
-        self.buttons = [button.Button(self.window, (10, 10, 100, 20), "aboba", self.map_with_dfs)]
+        self.button_width = 100
+        self.button_height = 20
+        self.buttons = [button.Button(self.window, (
+        constants.MARGIN_TOP / 4, constants.MARGIN_TOP / 4, self.button_width, self.button_height), "aboba",
+                                      self.map_with_dfs),
+                        button.Button(self.window, (
+                        constants.MARGIN_TOP / 2 + self.button_width, constants.MARGIN_TOP / 4, self.button_width,
+                        self.button_height), "aboba", self.map_with_dfs)]
 
     def run(self):
         self.map_with_dfs()

@@ -13,19 +13,31 @@ class DFSGenerator:
         self.passes = {}
         self.generate_map()
 
-    def dfs(self, coords):
+    def dfs(self):
+        coords = (0, 0)
         self.visited[coords[0]][coords[1]] = 1
-        available_neighbours = self.get_neighbours(coords, (self.height, self.width))
+        queue = [coords]
 
-        while len(available_neighbours) > 0:
+        while len(queue) > 0:
+            self.visited[coords[0]][coords[1]] = 1
+            available_neighbours = self.get_neighbours(coords, (self.height, self.width),
+                                                       lambda coord: self.visited[coord[0]][coord
+                                                       [1]] == 1)
+
+            if len(available_neighbours) == 0:
+                del queue[-1]
+                if len(queue) > 0:
+                    coords = queue[-1]
+                continue
+
             direction = random.randint(0, len(available_neighbours) - 1)
             neighbour = available_neighbours[direction]
 
             if self.visited[neighbour[0]][neighbour[1]] == 0:
                 self.add_pass(coords, neighbour)
-                self.dfs(neighbour)
-
-            del available_neighbours[direction]
+                queue.append(neighbour)
+                coords = neighbour
+                continue
 
     def get_neighbours(self, coords, borders, condition_manager=(lambda coord: False)):
         neighbors = [(i, j) for i, j in zip([coords[0] - 1, coords[0] + 1, coords[0], coords[0]],
@@ -42,7 +54,7 @@ class DFSGenerator:
         return neighbors
 
     def generate_map(self):
-        self.dfs((0, 0))
+        self.dfs()
         for v in self.passes.keys():
             for to in self.passes[v]:
                 if v[0] == to[0]:
