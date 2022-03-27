@@ -29,7 +29,7 @@ class MapGraphics:
         for y in range(3 * self.y_cells):
             for x in range(3 * self.x_cells):
                 if self.field[y][x] == 1:
-                    pygame.draw.rect(self.window, (0, 255, 0), self.cells[y][x], 0)
+                    pygame.draw.rect(self.window, (0, 155, 0), self.cells[y][x], 0)
 
     def draw_cell(self, x1, y1, x2, y2):
         valid_coords_1 = self.cells[y1][x1].topleft

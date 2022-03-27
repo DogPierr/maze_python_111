@@ -53,6 +53,9 @@ class Generator:
                 coords = neighbour
 
             else:
+                yes_no = random.randint(0, 50)
+                if yes_no == 1:
+                    self.add_pass(coords, neighbour)
                 coords = neighbour
 
     def get_neighbours(self, coords, borders, condition_manager=(lambda coord: False)):
