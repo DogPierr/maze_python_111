@@ -20,10 +20,9 @@ class Game:
         self.graphics = map_graphics.MapGraphics(self.window_width, self.window_height, self.amount_of_cells_x,
                                                  self.amount_of_cells_y, self.window)
 
-        self.is_playing = True
-        self.is_stop = False
-
         self.files_menu = map_data.FilesMenu(self.window)
+
+        self.is_playing = True
 
         self.button_width = 100
         self.button_height = 20
@@ -78,9 +77,6 @@ class Game:
 
     def clear(self):
         self.graphics.clear_display()
-
-    def draw_files_menu(self):
-        self.files_menu.draw_menu()
 
     def click_buttons(self, event):
         for but in self.buttons:

@@ -1,7 +1,5 @@
 import os.path
 import constants
-import json
-import button
 
 
 class FilesMenu:
