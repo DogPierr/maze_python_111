@@ -4,14 +4,13 @@ import sys
 sys.setrecursionlimit(12000)
 
 
-class DFSGenerator:
+class Generator:
     def __init__(self, w, h):
         self.width = w
         self.height = h
         self.visited = [[0 for _ in range(self.width)] for _ in range(self.height)]
         self.map = [[1 for _ in range(self.width * 3)] for _ in range(self.height * 3)]
         self.passes = {}
-        self.generate_map()
 
     def dfs(self):
         coords = (0, 0)
@@ -39,6 +38,23 @@ class DFSGenerator:
                 coords = neighbour
                 continue
 
+    def aldous_broder(self):
+        coords = (0, 0)
+        not_visited = self.width * self.height
+        while not_visited > 0:
+            neighbours = self.get_neighbours(coords, (self.height, self.width))
+            rand_dir = random.randint(0, len(neighbours) - 1)
+            neighbour = neighbours[rand_dir]
+
+            if self.visited[neighbour[0]][neighbour[1]] == 0:
+                self.add_pass(coords, neighbour)
+                self.visited[neighbour[0]][neighbour[1]] = 1
+                not_visited -= 1
+                coords = neighbour
+
+            else:
+                coords = neighbour
+
     def get_neighbours(self, coords, borders, condition_manager=(lambda coord: False)):
         neighbors = [(i, j) for i, j in zip([coords[0] - 1, coords[0] + 1, coords[0], coords[0]],
                                             [coords[1], coords[1], coords[1] + 1, coords[1] - 1])]
@@ -54,7 +70,6 @@ class DFSGenerator:
         return neighbors
 
     def generate_map(self):
-        self.dfs()
         for v in self.passes.keys():
             for to in self.passes[v]:
                 if v[0] == to[0]:

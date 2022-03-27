@@ -10,9 +10,6 @@ class FilesMenu:
 
         self.window = window
 
-        self.buttons = [
-            button.Button(self.window, (constants.WIDTH - 20, constants.MARGIN_TOP / 4, 20, 20), ">", self.load)]
-
     def read_next(self):
         files = os.listdir(constants.SAVE_DIR)
         if len(files) > 0:

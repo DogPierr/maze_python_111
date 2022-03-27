@@ -1,5 +1,5 @@
 import pygame
-import dfs_gen
+import map_gen
 import map_graphics
 import map_solver
 import constants
@@ -20,7 +20,6 @@ class Game:
         self.graphics = map_graphics.MapGraphics(self.window_width, self.window_height, self.amount_of_cells_x,
                                                  self.amount_of_cells_y, self.window)
 
-        self.gen_algo = 'dfs'
         self.is_playing = True
         self.is_stop = False
 
@@ -29,16 +28,25 @@ class Game:
         self.button_width = 100
         self.button_height = 20
         self.buttons = [button.Button(self.window, (
-            constants.MARGIN_TOP / 4, constants.MARGIN_TOP / 4, self.button_width, self.button_height), "aboba",
+            constants.MARGIN_TOP / 4, constants.MARGIN_TOP / 4, self.button_width, self.button_height), "dfs",
                                       self.map_with_dfs),
                         button.Button(self.window, (
                             constants.MARGIN_TOP / 2 + self.button_width, constants.MARGIN_TOP / 4, self.button_width,
-                            self.button_height), "aboba", self.map_with_dfs), button.Button(self.window, (
-                constants.WIDTH - 20, constants.MARGIN_TOP / 4, self.button_height, self.button_height), ">",
-                                                                                            self.load_next)]
+                            self.button_height), "aldous", self.map_with_aldous), button.Button(self.window, (
+                constants.WIDTH - (3 * constants.MARGIN_TOP) / 4, constants.MARGIN_TOP / 4, self.button_height,
+                self.button_height), ">",
+                                                                                                self.load_next),
+                        button.Button(self.window, (
+                            constants.WIDTH - (6 * constants.MARGIN_TOP) / 4, constants.MARGIN_TOP / 4,
+                            self.button_height,
+                            self.button_height),
+                                      "<",
+                                      self.load_next), button.Button(self.window, (
+                constants.WIDTH - (7 * constants.MARGIN_TOP) / 4 - self.button_width, constants.MARGIN_TOP / 4,
+                self.button_width, self.button_height), "save",
+                                                                     self.save)]
 
     def run(self):
-        self.map_with_dfs()
         while self.is_playing:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -50,9 +58,20 @@ class Game:
 
     def map_with_dfs(self):
         self.clear()
-        dfs = dfs_gen.DFSGenerator(self.amount_of_cells_x, self.amount_of_cells_y)
+        dfs = map_gen.Generator(self.amount_of_cells_x, self.amount_of_cells_y)
+        dfs.dfs()
+        dfs.generate_map()
         self.graphics.gen_map(dfs.map, dfs.passes)
-        self.files_menu.save(dfs.map, dfs.passes)
+        solve = map_solver.Solver(self.graphics.passes, self.amount_of_cells_x, self.amount_of_cells_y)
+        pygame.display.flip()
+        self.graphics.draw_path(solve.path)
+
+    def map_with_aldous(self):
+        self.clear()
+        dfs = map_gen.Generator(self.amount_of_cells_x, self.amount_of_cells_y)
+        dfs.aldous_broder()
+        dfs.generate_map()
+        self.graphics.gen_map(dfs.map, dfs.passes)
         solve = map_solver.Solver(self.graphics.passes, self.amount_of_cells_x, self.amount_of_cells_y)
         pygame.display.flip()
         self.graphics.draw_path(solve.path)
@@ -69,15 +88,27 @@ class Game:
 
     def load_next(self):
         files = self.files_menu.read_next()
+        self.load(files)
+
+    def load_prev(self):
+        files = self.files_menu.read_prev()
+        self.load(files)
+
+    def load(self, files):
         if files is not None:
             map, passes = files[0], files[1]
             self.clear()
-            self.graphics = map_graphics.MapGraphics(self.window_width, self.window_height, len(map[0]) // 3,
-                                                 len(map) // 3, self.window)
+            self.amount_of_cells_x = len(map[0]) // 3
+            self.amount_of_cells_y = len(map) // 3
+            self.graphics = map_graphics.MapGraphics(self.window_width, self.window_height, self.amount_of_cells_x,
+                                                     self.amount_of_cells_y, self.window)
             self.graphics.gen_map(map, passes)
             solve = map_solver.Solver(self.graphics.passes, self.amount_of_cells_x, self.amount_of_cells_y)
             pygame.display.flip()
             self.graphics.draw_path(solve.path)
+
+    def save(self):
+        self.files_menu.save(self.graphics.field, self.graphics.passes)
 
 
 game = Game()

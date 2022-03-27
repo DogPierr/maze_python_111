@@ -12,6 +12,7 @@ class MapGraphics:
         self.y_cells = y_cells
         self.cell_width = self.width / (3 * self.y_cells)
         self.cell_height = self.cell_width
+        self.speed = (self.width / 5)
 
         self.cells = [
             [pygame.Rect(i * self.cell_width, constants.MARGIN_TOP + j * self.cell_height, self.cell_width,
@@ -32,8 +33,11 @@ class MapGraphics:
                     pygame.draw.rect(self.window, (0, 255, 0), self.cells[y][x], 0)
 
     def draw_cell(self, x, y):
-        pygame.draw.rect(self.window, (255, 0, 0), self.cells[y][x], 0)
-        # pygame.time.delay(1)
+        valid_coords = self.cells[y][x].topleft
+        pygame.draw.rect(self.window, (255, 0, 0),
+                         pygame.Rect(valid_coords[0] + self.cell_width / 4, valid_coords[1] + self.cell_width / 4,
+                                     self.cell_width / 2, self.cell_width / 2), 0)
+        pygame.time.delay(max(0, int(self.width / self.speed)))
         pygame.display.flip()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

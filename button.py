@@ -6,13 +6,19 @@ class Button(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.rect = pygame.Rect(coords)
         self.image = pygame.Surface((coords[2], coords[3]))
-        self.text = text
         self.func = func
         self.window = window
+        font = pygame.font.Font(None, coords[3])
+        self.text = font.render(
+            text, True, (0, 0, 0))
+        self.place = self.text.get_rect(
+            center=(coords[0] + coords[2] / 2, coords[1] + coords[3] / 2))
         self.draw_button()
 
     def draw_button(self):
         pygame.draw.rect(self.window, (255, 255, 255), self.rect, 0)
+        self.window.blit(self.text, self.place)
+        pygame.display.update()
         pygame.display.flip()
 
     def click(self, event):
