@@ -4,7 +4,7 @@ import button
 import sys
 
 
-class Graphics:
+class MapGraphics:
     def __init__(self, w, h, x_cells, y_cells, window):
         self.width = w
         self.height = h

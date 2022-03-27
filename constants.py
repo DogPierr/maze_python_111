@@ -1,7 +1,7 @@
 WIDTH = 960
 HEIGHT = 960
-CELLS_X = 3
-CELLS_Y = 3
+CELLS_X = 2
+CELLS_Y = 2
 MARGIN_TOP = 40
 SAVE_DIR = "saves"
 SAVE_NAME = "map"
