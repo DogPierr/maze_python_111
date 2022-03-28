@@ -3,6 +3,11 @@ import sys
 
 sys.setrecursionlimit(12000)
 
+class Edge:
+    def __init__(self):
+        self.weight = 0
+        (self.startX, self.startY) = (0, 0)
+        (self.endX, self.endY) = (0, 0)
 
 class Generator:
     def __init__(self, w, h):
@@ -57,6 +62,28 @@ class Generator:
                 if yes_no == 1:
                     self.add_pass(coords, neighbour)
                 coords = neighbour
+
+    def kruskal(self):
+        groups = {(j, i): i * self.width + j for i in range(self.width) for j in range(self.height)}
+        edges = self.create_random_passes()
+        for edge in edges:
+            if groups[edge[0]] != groups[edge[1]]:
+                self.add_pass(edge[0], edge[1])
+                self.add_pass(edge[1], edge[0])
+                for v in groups.keys():
+                    if groups[v] == groups[edge[1]]:
+                        groups[v] = groups[edge[0]]
+
+    def create_random_passes(self):
+        edges = []
+        for i in range(self.height):
+            for j in range(self.width):
+                neighbours = self.get_neighbours((i, j), (self.height, self.width))
+                for neighbour in neighbours:
+                    edges.append(((i, j), neighbour))
+                    edges.append((neighbour, (i, j)))
+        random.shuffle(edges)
+        return edges
 
     def get_neighbours(self, coords, borders, condition_manager=(lambda coord: False)):
         neighbors = [(i, j) for i, j in zip([coords[0] - 1, coords[0] + 1, coords[0], coords[0]],
