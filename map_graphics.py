@@ -28,7 +28,8 @@ class MapGraphics:
 
         self.is_stopped = False
         self.stop_button = button.Button(self.window, (
-            constants.WIDTH / 2 + constants.BIG_BUTTON_WIDTH / 2 + constants.MARGIN_TOP / 4, constants.MARGIN_TOP / 4, constants.BIG_BUTTON_WIDTH,
+            constants.WIDTH / 2 + constants.BIG_BUTTON_WIDTH / 2 + constants.MARGIN_TOP / 4, constants.MARGIN_TOP / 4,
+            constants.BIG_BUTTON_WIDTH,
             constants.BIG_BUTTON_HEIGHT), "stop", self.stop)
 
     def gen_map(self, map, passes):

@@ -1,13 +1,6 @@
 import random
 import sys
 
-sys.setrecursionlimit(12000)
-
-class Edge:
-    def __init__(self):
-        self.weight = 0
-        (self.startX, self.startY) = (0, 0)
-        (self.endX, self.endY) = (0, 0)
 
 class Generator:
     def __init__(self, w, h):
